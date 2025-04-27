@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>React Counter Example</title>
+        <link href="index.css" rel="stylesheet">
+        <!-- React CDN -->
+        <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+        <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+        <!-- Babel for JSX -->
+        <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+    </head>
+    <body>
+        <div id="root"></div>
+
+        <script type="text/babel">
+            // 1. Primer componente de Greeitng 
+            function Componente() {
+            return <h1>¡Hola, bienvenido a React!</h1>;
+            }
+
+            // 2. Segundo Componente Hijo CommentForm
+            function CommentForm({ NewInput }){
+                const [input, setInput] = React.useState('');
+
+                const handleInputChange = (event) => {
+                    setInput(event.target.value);
+                };
+
+                const handleKeyDown = (event) => {
+                    if(event.key === 'Enter' && input.trim() !== ''){
+                        NewInput(input);
+                        setInput('');
+                    }
+                }
+
+                return (
+                    <div className = "comment-form">
+                        <h1>Comentarios de React</h1>
+                        <input
+                            type="text"
+                            value={input}
+                            onChange={handleInputChange}
+                            onKeyDown={handleKeyDown}
+                            placeholder="Escribe tu comentario..."
+                        />
+                        <button onClick = {() => {
+                            if (input.trim() !== ''){
+                                NewInput(input);
+                                setInput('');
+                            }
+                        }}>Commentar
+                        </button>
+                    </div>
+                );
+            }
+
+            // 3. Tercer Componente Padre APP 
+            function App(){
+
+                const [comments, setComments] = React.useState([]);
+
+                function addComment(newComment){
+                    setComments([...comments, newComment]);
+                }
+
+                return (
+                    <div className="contenedor-app">
+                    <Componente />
+                    <CommentForm NewInput={addComment} />
+
+                    <h2>Lista de Comentarios:</h2>
+                    {comments.length === 0 ? (
+                        <p className="no-comments">
+                            No hay comentarios aun!</p>
+                    ) : (
+                        <ul className="comment-list">
+                        {comments.map((comentario, index) => (
+                            <li key={index}>{comentario}</li>
+                        ))}
+                        </ul>
+                    )}
+                    </div>
+                );
+            } 
+            
+            // 4. Renderizar App
+            const root = ReactDOM.createRoot(document.getElementById('root'));
+            root.render(<App />);
+        </script>
+        <style>
+            body {
+                margin: 0;
+                padding: 0;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                min-height: 100vh;
+                font-family: Arial, sans-serif;
+                background-color: #3a1d7e;
+            }
+            button {
+                padding: 0.5rem 1.5rem;
+                font-size: 1.5rem;
+                border: none;
+                border-radius: 5px;
+                background-color: #6e34db;
+                color: white;
+                cursor: pointer;
+                transition: background-color 0.2s;
+            }
+
+            button:hover {
+                background-color: #4829b9;
+            }
+            h1,h2{
+                color:#331c89;
+            }
+            .contenedor-app {
+            background-color: white;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            width: 90%;
+            max-width: 500px;
+            text-align: center;
+            }
+            .comment-form input {
+            flex: 1;
+            padding: 0.5rem;
+            font-size: 1rem;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            }
+
+            .comment-form button {
+            padding: 0.5rem 1rem;
+            font-size: 1rem;
+            border: none;
+            border-radius: 5px;
+            background-color: #6e34db;
+            color: white;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            }
+            .comment-list {
+            list-style-type: none;
+            padding: 0;
+            margin-top: 1rem;
+            text-align: left;
+            }
+
+            .comment-list li {
+            background-color: #ebe5f9;
+            margin-bottom: 0.5rem;
+            padding: 0.5rem;
+            border-radius: 5px;
+            }
+
+            .no-comments {
+            color: #777;
+            font-style: italic;
+            margin-top: 1rem;
+            }
+        </style>
+    </body>
+</html>
